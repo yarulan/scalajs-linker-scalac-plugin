@@ -1,0 +1,4 @@
+<plugin>
+    <name>sjsld</name>
+    <classname>pro.ulan.scalajslinkerscalacplugin.ScalajsLinkerScalacPlugin</classname>
+</plugin>
