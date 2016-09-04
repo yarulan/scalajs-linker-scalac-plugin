@@ -21,14 +21,14 @@ val plugin = defproj("plugin").settings(
 )
 
 val tests = defproj("tests").settings(
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-
   (test in Test) <<= (test in Test) dependsOn (assembly in plugin)
 )
 
 val root = defproj("root", Some(".")).aggregate(plugin, tests)
 
 def defproj(id: String, base: Option[String] = None) = Project(id, new File(base.getOrElse(id))).settings(
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test",
+
   publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository"))),
 
   releaseTagComment := s"Release ${(version in ThisBuild).value}",

@@ -36,9 +36,9 @@ class LinkerRunner(global: Global, pluginArgs: List[String]) {
     global.log("Plugin args: " + pluginArgs.mkString(" "))
     global.log("Classpath: " + classPath.asClassPathString)
 
-    val scalaJsClassPath = filterSjsJars(classPath.asURLs)
+    val scalaJsClassPath = LinkerRunner.filterClasspath(classPath.asURLs.map(_.getPath))
 
-    global.log("Scalajs jars: " + scalaJsClassPath.map(url => new File(url.getPath)).mkString(File.pathSeparator))
+    global.log("Scalajs jars: " + scalaJsClassPath.mkString(File.pathSeparator))
 
     val destFile = new File(outputDir, "app.js")
 
@@ -46,8 +46,7 @@ class LinkerRunner(global: Global, pluginArgs: List[String]) {
       (if (pluginArgs.exists(List("-o", "--output").contains)) List() else List("--output", destFile.getAbsolutePath)) ++
         (if (pluginArgs.exists(List("stdlib").contains)) List() else List("--stdlib", scalaJsLibraryUrl.getFile)) ++
         pluginArgs ++
-        List(outputDir) ++
-        scalaJsClassPath.map(_.getFile)
+        scalaJsClassPath
 
     global.log("Linker args: " + linkerArgs.mkString(" "))
 
@@ -58,14 +57,18 @@ class LinkerRunner(global: Global, pluginArgs: List[String]) {
     global.log(s"Linking completed in ${time / 1000}s ${time % 1000}ms, result is written to $destFile")
   }
 
-  def filterSjsJars(urls: Seq[URL]): Seq[URL] = {
-    urls.filter(_.getPath.contains("_sjs"))
-  }
-
   def measureTime[T](f: => T): (T, Long) = {
     val before = System.currentTimeMillis()
     val result = f
     val after = System.currentTimeMillis()
     (result, after - before)
+  }
+}
+
+object LinkerRunner {
+  def filterClasspath(files: Seq[String]): Seq[String] = {
+    files.filter { file =>
+      file.contains("_sjs") || !file.endsWith(".jar")
+    }
   }
 }
