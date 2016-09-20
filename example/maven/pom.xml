@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>pro.ulan</groupId>
+    <artifactId>scalajs-linker-scalac-plugin-example</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <scalaVersionBin>2.11</scalaVersionBin>
+        <scalaVersionFull>${scalaVersionBin}.8</scalaVersionFull>
+        <scalajsVersionBin>0.6</scalajsVersionBin>
+        <scalajsVersionFull>${scalajsVersionBin}.12</scalajsVersionFull>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.11.8</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.soc</groupId>
+            <artifactId>scala-java-time_sjs${scalajsVersionBin}_${scalaVersionBin}</artifactId>
+            <version>2.0.0-M3</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>${project.basedir}/../src</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <displayCmd>true</displayCmd>
+                    <compilerPlugins>
+                        <compilerPlugin>
+                            <groupId>org.scala-js</groupId>
+                            <artifactId>scalajs-compiler_${scalaVersionFull}</artifactId>
+                            <version>${scalajsVersionFull}</version>
+                        </compilerPlugin>
+                        <compilerPlugin>
+                            <groupId>pro.ulan</groupId>
+                            <artifactId>scalajs-linker-scalac-plugin</artifactId>
+                            <version>test</version>
+                            <classifier>assembly</classifier>
+                        </compilerPlugin>
+                    </compilerPlugins>
+                    <args>
+                        <arg>-Ylog:sjsld</arg>
+                    </args>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

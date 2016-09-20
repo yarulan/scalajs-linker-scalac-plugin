@@ -40,13 +40,16 @@ class LinkerRunner(global: Global, pluginArgs: List[String]) {
 
     global.log("Scalajs jars: " + scalaJsClassPath.mkString(File.pathSeparator))
 
+    global.log("Output dir: " + outputDir)
+
     val destFile = new File(outputDir, "app.js")
 
     val linkerArgs =
       (if (pluginArgs.exists(List("-o", "--output").contains)) List() else List("--output", destFile.getAbsolutePath)) ++
-        (if (pluginArgs.exists(List("stdlib").contains)) List() else List("--stdlib", scalaJsLibraryUrl.getFile)) ++
-        pluginArgs ++
-        scalaJsClassPath
+      (if (pluginArgs.exists(List("stdlib").contains)) List() else List("--stdlib", scalaJsLibraryUrl.getFile)) ++
+      pluginArgs ++
+      scalaJsClassPath ++
+      Seq(outputDir)
 
     global.log("Linker args: " + linkerArgs.mkString(" "))
 

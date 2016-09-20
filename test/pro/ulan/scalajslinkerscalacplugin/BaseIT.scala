@@ -3,13 +3,11 @@ package pro.ulan.scalajslinkerscalacplugin
 import java.io.FileReader
 import javax.script.ScriptEngineManager
 
-import org.scalatest.{FunSuite, Matchers}
-
-class IntegrationTest extends FunSuite with Matchers {
-  test("it") {
-    exec("cd tests && cd testProject && sbt clean compile")
+abstract class BaseIT extends FunSuite {
+  def performTest(genJsCmd: String, targetJsFile: String) {
+    exec(genJsCmd)
     val engine = new ScriptEngineManager(null).getEngineByName("nashorn")
-    val reader = new FileReader("tests/testProject/target/scala-2.11/classes/app.js")
+    val reader = new FileReader(targetJsFile)
     engine.eval(reader)
     val result = engine.eval("pro.ulan.scalajslinkerscalacplugin.ExampleApp().method__I()")
     result shouldBe 2

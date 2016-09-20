@@ -1,8 +1,6 @@
 package pro.ulan.scalajslinkerscalacplugin
 
-import org.scalatest.{FunSuite, Matchers}
-
-class LinkerRunnerTest extends FunSuite with Matchers {
+class LinkerRunnerTest extends FunSuite {
   test("filterClasspath") {
     val classpath = LinkerRunner.filterClasspath(Seq(
       """C:\bin\java\jdk1.8.0_45\jre\lib\resources.jar""",
